@@ -31,7 +31,7 @@ class Education(models.Model):
         verbose_name_plural = 'Educations'
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.school)
+        self.slug = slugify(str(self.school) + str(self.owner) + str(self.major))
         super(Education, self).save(*args, **kwargs)
 
     def __str__(self):
@@ -43,7 +43,7 @@ class WorkExperience(models.Model):
     owner = models.ForeignKey(User, related_name='experience_added', on_delete=models.CASCADE)
     company = models.CharField(blank=False, null=False, max_length=255)
     position = models.CharField(blank=False, null=False, max_length=255)
-    description_or_role = models.CharField(blank=False, null=False, max_length=255)
+    description_or_role = RichTextField(blank=True, null=True)
     year = models.CharField(blank=False, null=False, max_length=255)
     is_active = models.BooleanField(default=True)
     date = models.DateTimeField(blank=True, null=True)
@@ -54,7 +54,7 @@ class WorkExperience(models.Model):
         verbose_name_plural = 'WorkExperiences'
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.position)
+        self.slug = slugify(str(self.position) + str(self.owner))
         super(WorkExperience, self).save(*args, **kwargs)
 
     def __str__(self):
@@ -80,7 +80,7 @@ class Skill(models.Model):
         return self.name
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.name)
+        self.slug = slugify(str(self.name) + str(self.owner))
         super(Skill, self).save(*args, **kwargs)
 
     @property
@@ -108,7 +108,7 @@ class Leadership(models.Model):
         return self.name
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(self.name)
+        self.slug = slugify(str(self.name) + str(self.owner))
         super(Leadership, self).save(*args, **kwargs)
 
 
@@ -129,7 +129,7 @@ class Project(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.id:
-            self.slug = slugify(self.name)
+            self.slug = slugify(str(self.name) + str(self.owner))
         super(Project, self).save(*args, **kwargs)
 
     class Meta:

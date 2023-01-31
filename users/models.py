@@ -1,6 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django_countries.fields import CountryField
+from phone_field import PhoneField
 from phonenumber_field.formfields import PhoneNumberField
 from localflavor.us.models import USStateField, USZipCodeField
 from localflavor.us.us_states import STATE_CHOICES
@@ -18,7 +19,7 @@ class User(AbstractUser):
     city = models.CharField("City", max_length=1024,)
     state = USStateField(choices=STATE_CHOICES)
     country = CountryField()
-    phone = PhoneNumberField()
+    phone = PhoneField(blank=True, help_text='Contact phone number')
     personal_url1 = models.CharField("Url line 1", max_length=1024, blank=True, null=True)
     personal_url2 = models.CharField("Url line 2", max_length=1024, blank=True, null=True)
     personal_url3 = models.CharField("Url line 3", max_length=1024, blank=True, null=True)
@@ -49,4 +50,5 @@ class Profile(models.Model):
         if self.photo and hasattr(self.photo, 'url'):
             return self.photo.url
         else:
-            return "https://res.cloudinary.com/dh13i9dce/image/upload/v1642216377/media/avatars/defaultprofile_vad1ub.png"
+            return "https://res.cloudinary.com/dh13i9dce/image/upload/v1642216377/media/avatars/defaultprofile_vad1ub" \
+                   ".png "
