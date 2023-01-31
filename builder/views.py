@@ -1,44 +1,20 @@
-from django.shortcuts import render
-from django.views import generic
-from rest_framework.renderers import TemplateHTMLRenderer
-from rest_framework.response import Response
-from rest_framework.views import APIView
-from rest_framework import viewsets
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseRedirect
+
 from .models import Education, Project, Leadership, Skill, WorkExperience
-from .serializers import EducationSerializer
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
-from django.db.models import Count
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views import generic
-from django.views.generic import ListView, CreateView, UpdateView, DeleteView, FormView, DetailView
-from django.views.generic.base import TemplateResponseMixin, View
+from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 from .forms import EducationForm, WorkExperienceForm, SkillForm, ProjectForm, LeadershipForm
 
 
 # Create your views here.
-class EducationViewSet(viewsets.ModelViewSet):
-    """
-    API endpoint that allows users to be viewed or edited.
-    """
-    queryset = Education.objects.all()
-    serializer_class = EducationSerializer
-    # permission_classes = [permissions.IsAuthenticated]
-
-
-class EducationList(APIView):
-    renderer_classes = [TemplateHTMLRenderer]
-    template_name = 'index.html'
-
-    def get(self, request):
-        queryset = Education.objects.all()
-        return Response({'educations': queryset})
-
-
 class ResumeView(generic.TemplateView):
     """View for the Education page"""
-    template_name = "index.html"
+    template_name = "education.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -68,7 +44,7 @@ class EditableCreatorMixin(object):
 
 
 class CreatorEducationMixin(CreatorMixin, LoginRequiredMixin, PermissionRequiredMixin, SuccessMessageMixin):
-    success_url = reverse_lazy('manage_education_list')
+    success_url = reverse_lazy('builder:manage_education_list')
     success_message = "The education was added successfully"
 
 
@@ -124,7 +100,7 @@ class CreatorWorkMixin(object):
 
 
 class CreatorWorkExperienceMixin(CreatorWorkMixin, LoginRequiredMixin, PermissionRequiredMixin, SuccessMessageMixin):
-    success_url = reverse_lazy('manage_work_experience_list')
+    success_url = reverse_lazy('builder:manage_work_experience_list')
     success_message = "The work experience was added successfully"
 
 
@@ -169,7 +145,7 @@ class ManageWorkExperienceDetailView(DetailView, LoginRequiredMixin):
 """The following are the CRUD operations for Skill"""
 
 
-class CreatorMixin(object):
+class CreatorMixinSkill(object):
     model = Skill
     form_class = SkillForm
 
@@ -179,12 +155,12 @@ class CreatorMixin(object):
         return queryset.filter(owner=self.request.user)
 
 
-class CreatorSkillMixin(CreatorMixin, LoginRequiredMixin, PermissionRequiredMixin, SuccessMessageMixin):
-    success_url = reverse_lazy('manage_skill_list')
+class CreatorSkillMixin(CreatorMixinSkill, LoginRequiredMixin, PermissionRequiredMixin, SuccessMessageMixin):
+    success_url = reverse_lazy('builder:manage_skill_list')
     success_message = "The skill was added successfully"
 
 
-class EditableCreatorMixinSkill(CreatorEducationMixin, EditableCreatorMixin):
+class EditableCreatorMixinSkill(CreatorSkillMixin, EditableCreatorMixin):
     template_name = 'skill/management/form.html'
 
 
@@ -225,7 +201,7 @@ class ManageSkillDetailView(DetailView, LoginRequiredMixin):
 """The following are the CRUD operations for Leadership"""
 
 
-class CreatorMixin(object):
+class CreatorMixinLeadership(object):
     model = Leadership
     form_class = LeadershipForm
 
@@ -235,12 +211,18 @@ class CreatorMixin(object):
         return queryset.filter(owner=self.request.user)
 
 
-class CreatorLeadershipMixin(CreatorMixin, LoginRequiredMixin, PermissionRequiredMixin, SuccessMessageMixin):
-    success_url = reverse_lazy('manage_leadership_list')
+class EditableLeadershipCreatorMixin(object):
+    def form_valid(self, form):
+        form.instance.owner = self.request.user
+        return super().form_valid(form)
+
+
+class CreatorLeadershipMixin(CreatorMixinLeadership, LoginRequiredMixin, PermissionRequiredMixin, SuccessMessageMixin):
+    success_url = reverse_lazy('builder:manage_leadership_list')
     success_message = "The leadership role was added successfully"
 
 
-class EditableCreatorMixinLeadership(CreatorLeadershipMixin, EditableCreatorMixin):
+class EditableCreatorMixinLeadership(CreatorLeadershipMixin, EditableLeadershipCreatorMixin):
     template_name = 'leadership/management/form.html'
 
 
@@ -281,7 +263,7 @@ class ManageLeadershipDetailView(DetailView, LoginRequiredMixin):
 """The following are the CRUD operations for Project"""
 
 
-class CreatorMixin(object):
+class CreatorMixinProject(object):
     model = Project
     form_class = ProjectForm
 
@@ -291,8 +273,8 @@ class CreatorMixin(object):
         return queryset.filter(owner=self.request.user)
 
 
-class CreatorProjectMixin(CreatorMixin, LoginRequiredMixin, PermissionRequiredMixin, SuccessMessageMixin):
-    success_url = reverse_lazy('manage_project_list')
+class CreatorProjectMixin(CreatorMixinProject, LoginRequiredMixin, PermissionRequiredMixin, SuccessMessageMixin):
+    success_url = reverse_lazy('builder:manage_project_list')
     success_message = "The project was added successfully"
 
 
@@ -334,6 +316,65 @@ class ManageProjectDetailView(DetailView, LoginRequiredMixin):
         return context
 
 
+class EducationView(generic.TemplateView):
+    """View for the first page of the resume"""
+    template_name = "education.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        educations = Education.objects.filter(is_active=True)
+        context["educations"] = educations
+
+        return context
 
 
+class WorkExperiencesView(generic.TemplateView):
+    """View for the work experiences of the resume"""
+    template_name = "work_experiences.html"
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        work_experiences = WorkExperience.objects.filter(is_active=True)
+        context["work_experiences"] = work_experiences
+
+        return context
+
+
+class ProjectsView(generic.TemplateView):
+    """View for the projects of the resume"""
+    template_name = "projects.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        projects = Project.objects.filter(is_active=True)
+        context["projects"] = projects
+
+        return context
+
+
+class LeadershipView(generic.TemplateView):
+    """View for the campus involvement or leadership roles"""
+    template_name = "leadership.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        leaderships = Leadership.objects.filter(is_active=True)
+        context["leaderships"] = leaderships
+
+        return context
+
+
+class SkillsView(generic.TemplateView):
+    """View for the skills"""
+    template_name = "skills.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        skills = Skill.objects.filter(is_active=True)
+        context["skills"] = skills
+
+        return context
+
+
+class ContactView(generic.TemplateView):
+    template_name = "contact.html"
