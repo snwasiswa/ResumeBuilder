@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+<title>{% block title %}Leadership roles or extracurricular activities{% endblock %}</title>
+
+{% block content %}
+<div class="container">
+    <h1 class="py-5 text-center">Leadership roles or extracurricular activities</h1>
+    <div>
+        <p class="text-center py-3">
+            <a class="btn btn-success rounded-pill mx-5" href="{% url 'leadership_create' %}">
+                Add leadership role or extracurricular activity</a>
+        </p>
+        <table>
+            <caption>Added leadership roles or extracurricular activities</caption>
+            <thead>
+                <tr class="text-secondary">
+                    <th id="name">Title</th>
+                    <th id="role">Description or role</th>
+                    <th id="actions">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for leadership in object_list %}
+                <tr>
+                    <td><a class="text-success" href="{% url 'manage_leadership_detail' leadership.slug %}">
+                        {{ leadership.name }}</a>
+                    </td>
+                    <td>{{ leadership.description_or_role | safe }}</td>
+                    <td><a href="{% url 'leadership_edit' leadership.id %}"
+                            class="btn btn-success rounded-pill mx-2">Update</a>
+                        <a href="{% url 'leadership_delete' leadership.id %}"
+                            class="btn btn-success rounded-pill mx-2">Delete</a>
+                        <a href="{% url 'manage_leadership_detail' leadership.slug %}"
+                            class="btn btn-success rounded-pill mx-2">More Details</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <div>
+                    <p class="py-5">You have not added any leadership roles or extracurricular activities yet.</p>
+                </div>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="py-5"><div class="py-5"></div></div>
+    </div>
+</div>
+{% endblock %}

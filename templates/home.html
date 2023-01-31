@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load static %}
+<title>{% block title %}Home{% endblock %}</title>
+{% block content %}
+<div class="container-fluid mt-0 px-0">
+</div>
+</div>
+<div class="row-fluid text-center my-5 pb-5 pt-3">
+</div>
+<div class="container my-3 pt-5 pb-3">
+    <div class="row-fluid text-center">
+        <h3> Build your free resume with us and get is as a pdf</h3>
+        <p> Fill out the information you need to generate your resume with our tool is easy.</p>
+    </div>
+    <div class="row-fluid">
+        <div class="text-center">
+             <a class="btn btn-outline-success mx-3 my-2 my-sm-0" href="{% url 'registration' %}">Get started</a>
+        </div>
+    </div>
+    <div class="row-fluid text-center my-5 pb-5 pt-3">
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+<title>{% block title %} {{ object.school }}{% endblock %}</title>
+{% block content %}
+<div class="container py-5 list">
+    {% with education=object.educations %}
+    <div class="py-5">
+        <h3 class="text-center text-light action_title">{{ object.school }}</h3>
+        <p class="py-3">
+        <div class="">
+            <br><strong class="text-secondary">School :</strong> {{ object.school }}</br>
+            <br><strong class="text-secondary">Major:</strong> {{ object.major }}</br>
+            <br><strong class="text-secondary">Minor:</strong> {{ object.minor }}</br>
+            <br><strong class="text-secondary">Degree:</strong> {{ object.degree }}</br>
+            <br><strong class="text-secondary">GPA:</strong> {{ object.gpa }} / {{ object.scale }} </br>
+            <br><strong class="text-secondary">Year:</strong> {{ object.year }}</br>
+        </div>
+        </p>
+        <div class="py-5 text-center">
+            <a class="btn btn-success rounded-pill text-center" href="{% url 'manage_education_list' %}"> Back</a>
+        </div>
+        <div class="py-5">
+            <div class="py-5">
+            </div>
+        </div>
+    </div>
+    {% endwith %}
+</div>
+{% endblock %}

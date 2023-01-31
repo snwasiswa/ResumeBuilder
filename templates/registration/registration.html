@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% load django_bootstrap5 %}
+<title>{% block title %} Sign Up {% endblock %}</title>
+{% block content %}
+<div class="container py-5">
+  <div>
+    <h2 class="text-center pb-5 pt-5">Sign Up</h2>
+    <div class="container my-3 py-3">
+      <h3 class="text-center">Create New Account</h3>
+      <div class="row align-items-center justify-content-center ">
+        <div class="col-md-5 py-5 bg-light" tyle="margin: 0 auto;">
+          <p class="text-center text-success">Please fill out the registration form to get started.
+          </p>
+          <form method="post" class="py-3 text-info">
+            {% csrf_token %}
+            {% bootstrap_form form %}
+            <div class="text-center">
+              <button type="submit" class="btn btn-success rounded-pill text-center">Create my account</button>
+            </div>
+          </form>
+        </div>
+      </div>
+        <div class="py-5">
+          <div class="py-5"></div>
+        </div>
+      </div>
+    </div>
+    {% endblock %}

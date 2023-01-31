@@ -1,0 +1,38 @@
+<div class="form-inline my-2 my-lg-0 text-light">
+    {% if request.user.is_authenticated %}
+    <ul class="navbar-nav mr-auto">
+        <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle mx-1 text-warning" href="#" id="navbarDropdown" role="button"
+                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Manage
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                <a class="dropdown-item" href="{% url 'manage_education_list' %}">Education
+                </a>
+                <a class="dropdown-item" href="{% url 'manage_work_experience_list' %}">Work Experience
+                </a>
+                <a class="dropdown-item" href="{% url 'manage_project_list' %}">Projects
+                </a>
+                <a class="dropdown-item" href="{% url 'manage_skill_list' %}">Skills
+                </a>
+                <a class="dropdown-item" href="{% url 'manage_leadership_list' %}">Leadership roles
+                </a>
+            </div>
+        </li>
+    </ul>
+    <a class=text-light py-3 mx-3>
+        Hello, {{ request.user.first_name }}!
+    </a>
+    <a class="text-light mx-3" href="{% url 'edit_profile'%}">
+        Edit Profile
+        <img src="{{ user.profile.get_avatar_url }} " class="rounded-circle mx-1" alt="image avatar"
+            style="width: 40px; height: 40px;">
+    </a>
+    <a class="btn btn-outline-warning mx-3 my-2 my-sm-0" href="{% url 'logout' %}">Sign out</a>
+    {% else %}
+    <a class="tex-light nav-item mx-3">
+        Already have an account?
+    </a>
+    <a class="btn btn-outline-warning mx-3 my-2 my-sm-0" href="{% url 'login' %}">Sign in</a>
+    {% endif %}
+</div>

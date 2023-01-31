@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+<title>{% block title %}Delete project {% endblock %}</title>
+
+{% block content %}
+<div class="container py-5 text-center">
+    <h1 class="py-5">Delete project</h1>
+    <div>
+        <form action="" method="post" class="text-center">
+            {% csrf_token %}
+            <p class="text-info">Are you sure you want to delete "{{ object.name }}"?</p>
+            <button class="btn btn-success rounded-pill" type="submit">Confirm</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

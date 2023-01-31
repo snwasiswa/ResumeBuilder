@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+
+<title>{% block title %}Form of Registration{% endblock %}</title>
+
+{% block content %}
+<div class="container">
+    <div class="py-5 text-center">
+        {% if object %}
+        <h1>Update project
+            {% else %}
+            <h1>Add project</h1>
+            {% endif %}
+        </h1>
+    </div>
+    <div>
+        <h2 class="action_title text-center text-light">Project Information</h2>
+        <div class="py-5">
+            <div class="py-5">
+                <div class="bg-light">
+                    <div class="mx-3 py-3">
+                        <form method="post" class="pb-5 text-info">
+                            {% csrf_token %}
+                            {% bootstrap_form form %}
+                            <div class="text-center">
+                                <p><input type="submit" class="btn btn-success rounded-pill" value="Save"></p>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="py-5">
+        <div class="py-5"></div>
+    </div>
+</div>
+{% endblock %}

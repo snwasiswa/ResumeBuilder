@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+<title>{% block title %}Work experiences{% endblock %}</title>
+{% block content %}
+<div class="container">
+    <h1 class="py-5 text-center">Work experiences</h1>
+    <div>
+        <p class="text-center py-3">
+            <a class="btn btn-success rounded-pill mx-5" href="{% url 'work_experience_create' %}">
+                Add work experience</a>
+        </p>
+        <table>
+            <caption>Added work experiences</caption>
+            <thead>
+                <tr class="text-secondary">
+                    <th id="name">Company</th>
+                    <th id="position">Position</th>
+                    <th id="role">Description or role</th>
+                    <th id="year">Year</th>
+                    <th id="actions">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for work_experience in object_list %}
+                <tr>
+                    <td><a class="text-success" href="{% url 'manage_work_experience_detail' work_experience.slug %}">
+                        {{ work_experience.company }}</a>
+                    </td>
+                    <td>{{ work_experience.position }}</td>
+                    <td>{{ work_experience.description_or_role|safe }}</td>
+                    <td>{{ work_experience.year }}</td>
+                    <td><a href="{% url 'work_experience_edit' work_experience.id %}"
+                            class="btn btn-success rounded-pill mx-2">Update</a>
+                        <a href="{% url 'work_experience_delete' work_experience.id %}"
+                            class="btn btn-success rounded-pill mx-2">Delete</a>
+                        <a href="{% url 'manage_work_experience_detail' work_experience.slug %}"
+                            class="btn btn-success rounded-pill mx-2">More Details</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <div>
+                    <p class="py-5">You have not added any educations yet.</p>
+                </div>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="py-5"><div class="py-5"></div></div>
+    </div>
+</div>
+{% endblock %}

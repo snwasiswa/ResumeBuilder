@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+<title>{% block title %}Educations{% endblock %}</title>
+
+{% block content %}
+<div class="container">
+    <h1 class="py-5 text-center">Educations</h1>
+    <div>
+        <p class="text-center py-3">
+            <a class="btn btn-success rounded-pill mx-5" href="{% url 'education_create' %}">Add education</a>
+        </p>
+        <table>
+            <caption>Added educations</caption>
+            <thead>
+                <tr class="text-secondary">
+                    <th id="name">School</th>
+                    <th id="major">Major</th>
+                    <th id="degree">Degree</th>
+                    <th id="year">Year</th>
+                    <th id="actions">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for education in object_list %}
+                <tr>
+                    <td><a class="text-success" href="{% url 'manage_education_detail' education.slug %}">
+                        {{ education.school }}</a>
+                    </td>
+                    <td>{{ education.major }}</td>
+                    <td>{{ education.degree }}</td>
+                    <td>{{ education.year }}</td>
+                    <td><a href="{% url 'education_edit' education.id %}"
+                            class="btn btn-success rounded-pill mx-2">Update</a>
+                        <a href="{% url 'education_delete' education.id %}"
+                            class="btn btn-success rounded-pill mx-2">Delete</a>
+                        <a href="{% url 'manage_education_detail' education.slug %}"
+                            class="btn btn-success rounded-pill mx-2">More Details</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <div>
+                    <p class="py-5">You have not added any educations yet.</p>
+                </div>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="py-5"><div class="py-5"></div></div>
+    </div>
+</div>
+{% endblock %}

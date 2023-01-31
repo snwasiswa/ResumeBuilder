@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% load static %}
+
+<title>{% block title %}Address{% endblock %}</title>
+{% block content%}
+<section id="resume" class="py-5 section section-blank">
+  <div class="container text-light my-3 py-5">
+    {% include 'partials/resume_header.html' %}
+    <div class="container text-light pb-5" style="background-color: #4E6857">
+      <h3 class="section-tagline my-3 pt-5" style="text-align:center;">
+        <div class="navbar navbar-expand-lg navbar-dark" style="background-color: green">
+          <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+              <li class="nav-item ml-4 mr-3">
+                <a class="nav-link btn-outline-secondary active" href="/contact"> Contact</a>
+              </li>
+              <li class="nav-item mr-3">
+                <a class="nav-link " href="/educations"> Education</a>
+              </li>
+              <li class="nav-item mr-3">
+                <a class="nav-link" href="/work_experiences"> Experience</a>
+              </li>
+              <li class="nav-item mr-3">
+                <a class="nav-link" href="/projects"> Projects</a>
+              </li>
+              <li class="nav-item mr-3">
+                <a class="nav-link" href="/skills"> Skills</a>
+              </li>
+              <li class="nav-item ">
+                <a class="nav-link" href="/leaderships"> Extracurricular Activities </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </h3>
+      <h3 class="section-tagline my-3 py-3" style="text-align:left;">
+        <em class="fa fa-address-book">
+          Contact
+        </em>
+      </h3>
+      <div class="mx-3" style="background-color:#454646">
+        <div class="text-center mx-3">
+          <br>{{ request.user.address }}, {{ request.user.city }}, {{ request.user.state}} {{request.user.zip_code }} |
+          {{ request.user.email }} | {{ request.user.phone }}
+          {% if request.user.personal_url1 != None %}
+          | {{ request.user.personal_url1 }} |
+          {% endif %}
+          {% if request.user.personal_url2 != None %}
+          | {{ request.user.personal_url2 }} |
+          {% endif %}
+          {% if request.user.personal_url3 != None %}
+          | {{ request.user.personal_url3 }} |
+          {% endif %}
+          <span class="right">
+            <em class="float-right">{{ education.year }}</em>
+          </span>
+          <br>
+          <br>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}

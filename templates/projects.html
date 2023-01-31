@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% load static %}
+<title>{% block title %}Resume{% endblock %}</title>
+{% block content%}
+<section id="resume" class="py-5 section section-blank">
+    <div class="container text-light my-3 py-5">
+        {% include 'partials/resume_header.html' %}
+        <div class="container text-light pb-5" style="background-color: #4E6857">
+            <li style="list-style-type: none;">
+                <h3 class="section-tagline my-3 pt-5" style="text-align:left;">
+                    <div class="navbar navbar-expand-lg navbar-dark" style="background-color: green">
+                        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                            <ul class="navbar-nav mr-auto">
+                                <li class="nav-item ml-4 mr-3">
+                                    <a class="nav-link" href="/contact"> Contact</a>
+                                </li>
+                                <li class="nav-item mr-3">
+                                    <a class="nav-link " href="/educations"> Education</a>
+                                </li>
+                                <li class="nav-item mr-3">
+                                    <a class="nav-link" href="/work_experiences"> Experience</a>
+                                </li>
+                                <li class="nav-item mr-3">
+                                    <a class="nav-link btn-outline-secondary active" href="/projects"> Projects</a>
+                                </li>
+                                <li class="nav-item mr-3">
+                                    <a class="nav-link" href="/skills"> Skills</a>
+                                </li>
+                                <li class="nav-item ">
+                                    <a class="nav-link" href="/leaderships"> Extracurricular Activities </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </h3>
+            </li>
+            <h3 class="section-tagline my-3 py-3" style="text-align:left;">
+                <em class="fa fa-tasks">
+                    Projects
+                </em>
+            </h3>
+            <h5 class="text-center">Academic or work projects</h5>
+            <div class="mx-3" style="background-color:#454646">
+                {% for project in projects %}
+                {% if project.is_side_project == False and project.is_active %}
+                <div class="mx-3">
+                    <ul style="list-style-type: none;">
+                        <div class="pb-1 pt-3 mr-5">
+                            <div class="py-3">
+                                <strong class="text-secondary ">{{ project.name }}</strong>
+                                <span class="right">
+                                    <em class="float-right">{{ project.year }}</em>
+                                </span>
+                            </div>
+                            <p>
+                                {{ project.description }}
+                            </p>
+                            <p>
+                                {{ project.body|safe }}
+                            </p>
+                        </div>
+                    </ul>
+                </div>
+                <div class="pt-3" style="background-color:#4E6857"></div>
+                {% endif %}
+                {% endfor %}
+            </div>
+            <h5 class="text-center">Side projects</h5>
+            <div class="mx-3" style="background-color:#454646">
+                {% for project in projects %}
+                {% if project.is_active and project.is_side_project %}
+                <div class="mx-3">
+                    <ul style="list-style-type: none;">
+                        <div class="pb-1 pt-3 mr-5">
+                            <div class="py-3">
+                                <strong class="text-secondary ">{{ project.name }}</strong>
+                                <span class="right">
+                                    <em class="float-right">{{ project.year }}</em>
+                                </span>
+                            </div>
+                            <p>
+                                {{ project.description }}
+                            </p>
+                            <p>
+                                {{ project.body|safe }}
+                            </p>
+                        </div>
+                    </ul>
+                </div>
+                <div class="pt-3" style="background-color:#4E6857"></div>
+                {% endif %}
+                {% endfor %}
+            </div>
+            </li>
+        </div>
+    </div>
+</section>
+{% endblock %}

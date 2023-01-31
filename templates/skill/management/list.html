@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+<title>{% block title %}Skills{% endblock %}</title>
+{% block content %}
+<div class="container">
+    <h1 class="py-5 text-center">Skills</h1>
+    <div>
+        <p class="text-center py-3">
+            <a class="btn btn-success rounded-pill mx-5" href="{% url 'skill_create' %}">Add skill</a>
+        </p>
+        <table>
+            <caption>Added skills</caption>
+            <thead>
+                <tr class="text-secondary">
+                    <th id="name">Name</th>
+                    <th id="rating">Rating</th>
+                    <th id="hard">Hard skill</th>
+                    <th id="soft">Soft skill</th>
+                    <th id="actions">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for skill in object_list %}
+                <tr>
+                    <td><a class="text-success" href="{% url 'manage_skill_detail' skill.slug %}">
+                        {{ skill.name }}</a>
+                    </td>
+                    <td>{{ skill.rating }}</td>
+                    {% if skill.is_hard_skill %}
+                    <td>Yes</td>
+                    {% else %}
+                    <td>No</td>
+                    {% endif %}
+                    {% if skill.is_soft_skill %}
+                    <td>Yes</td>
+                    {% else %}
+                    <td>No</td>
+                    {% endif %}
+                    <td><a href="{% url 'skill_edit' skill.id %}"
+                            class="btn btn-success rounded-pill mx-2">Update</a>
+                        <a href="{% url 'skill_delete' skill.id %}"
+                            class="btn btn-success rounded-pill mx-2">Delete</a>
+                        <a href="{% url 'manage_skill_detail' skill.slug %}"
+                            class="btn btn-success rounded-pill mx-2">More Details</a>
+                    </td>
+                </tr>
+                {% empty %}
+                <div>
+                    <p class="py-5">You have not added any skills yet.</p>
+                </div>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="py-5"><div class="py-5"></div></div>
+    </div>
+</div>
+{% endblock %}

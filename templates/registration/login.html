@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% load django_bootstrap5 %}
+
+<title>{% block title %}Login{% endblock %}</title>
+
+<body>
+    {% block content %}
+    <div class="container py-5">
+        <div class="py-5">
+            <h2 class="text-center"> Log in</h2>
+        </div>
+        <div class="text-center ">
+            {% if form.errors %}
+            <p class="text-success">Password or username didn't match. Please enter correct password or username.</p>
+            {% else %}
+            <p class="text-success">Enter your credentials to sign in</p>
+            {% endif %}
+            <div class="row align-items-center justify-content-center">
+                <div class="col-md-4 py-5 bg-light" style="margin: 0 auto;">
+                    <h3 class="text-primary py-2"></h3>
+                    <form method="post" class="form-group pt-5 pb-3 text-left text-info" style="max-width: 40em; margin: auto;
+                    text-align: center" action="{% url 'login' %}">
+                        {% csrf_token %}
+                        {% bootstrap_form form %}
+                        <p class="text-center">
+                            <input class="btn btn-success rounded-pill" id="login" type="submit" name="next"
+                                value="Log in" />
+                        </p>
+                    </form>
+                    <p class="text-left"><a href="{% url 'password_reset' %}">Forgot your password?</a></p>
+                    <p>Don't have an account?</p>
+                    <div>
+                        <a class="btn btn-success rounded-pill" href="{% url 'registration' %}">Get started</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="py-5">
+            <div class="py-5"></div>
+        </div>
+    </div>
+    {% endblock %}
