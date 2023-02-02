@@ -3,7 +3,6 @@ from django.core.validators import MinValueValidator
 from django.db import models
 from django.utils.text import slugify
 from ckeditor.fields import RichTextField
-
 from users.models import User
 
 
@@ -54,7 +53,7 @@ class WorkExperience(models.Model):
         verbose_name_plural = 'WorkExperiences'
 
     def save(self, *args, **kwargs):
-        self.slug = slugify(str(self.position) + str(self.owner))
+        self.slug = slugify(str(self.position) + str(self.owner) + str(self.year))
         super(WorkExperience, self).save(*args, **kwargs)
 
     def __str__(self):

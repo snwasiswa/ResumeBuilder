@@ -4,6 +4,8 @@ from builder import views
 # Patterns of different paths
 urlpatterns = [
 
+    # url for generating resume pdf
+    path('resume_pdf', views.GenerateResumeView.as_view(), name='resume_pdf'),
     # Urls for different sections
     path('contact', views.ContactView.as_view(), name='contact'),
     path('projects', views.ProjectsView.as_view(), name='projects'),

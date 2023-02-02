@@ -1,16 +1,5 @@
-from ckeditor.widgets import CKEditorWidget
 from django import forms
-from django_countries.serializer_fields import CountryField
-from phonenumber_field.formfields import PhoneNumberField
-from phonenumber_field.widgets import PhoneNumberPrefixWidget
 from .models import Education, Skill, Project, Leadership, WorkExperience
-from localflavor.us.forms import USZipCodeField, USStateField
-from localflavor.us.us_states import STATE_CHOICES
-from django.utils.translation import gettext, gettext_lazy as _
-from django.db import models
-from users.models import User, Profile
-from phonenumber_field.formfields import PhoneNumberField
-from phonenumber_field.widgets import PhoneNumberPrefixWidget
 
 
 class EducationForm(forms.ModelForm):
@@ -18,7 +7,7 @@ class EducationForm(forms.ModelForm):
 
     class Meta:
         model = Education
-        fields = ('school', 'major', 'minor', 'degree', 'gpa', 'year',)
+        fields = ('school', 'major', 'minor', 'degree', 'gpa', 'scale', 'year',)
 
 
 class WorkExperienceForm(forms.ModelForm):

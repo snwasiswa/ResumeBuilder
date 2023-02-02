@@ -1,24 +1,24 @@
-from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect
-
+from django.http import HttpResponse
+from users.models import User
 from .models import Education, Project, Leadership, Skill, WorkExperience
-from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.messages.views import SuccessMessageMixin
-from django.shortcuts import render, redirect
+from django.template.loader import get_template
 from django.urls import reverse_lazy
-from django.views import generic
+from django.views import generic, View
 from django.views.generic import ListView, CreateView, UpdateView, DeleteView, DetailView
 from .forms import EducationForm, WorkExperienceForm, SkillForm, ProjectForm, LeadershipForm
+from weasyprint import HTML
 
 
 # Create your views here.
-class ResumeView(generic.TemplateView):
+class EducationView(generic.TemplateView):
     """View for the Education page"""
     template_name = "education.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        educations = Education.objects.all()
+        educations = Education.objects.filter(owner=self.request.user)
         context["educations"] = educations
 
         return context
@@ -43,8 +43,8 @@ class EditableCreatorMixin(object):
         return super().form_valid(form)
 
 
-class CreatorEducationMixin(CreatorMixin, LoginRequiredMixin, PermissionRequiredMixin, SuccessMessageMixin):
-    success_url = reverse_lazy('builder:manage_education_list')
+class CreatorEducationMixin(CreatorMixin, LoginRequiredMixin, SuccessMessageMixin):
+    success_url = reverse_lazy('manage_education_list')
     success_message = "The education was added successfully"
 
 
@@ -99,8 +99,8 @@ class CreatorWorkMixin(object):
         return queryset.filter(owner=self.request.user)
 
 
-class CreatorWorkExperienceMixin(CreatorWorkMixin, LoginRequiredMixin, PermissionRequiredMixin, SuccessMessageMixin):
-    success_url = reverse_lazy('builder:manage_work_experience_list')
+class CreatorWorkExperienceMixin(CreatorWorkMixin, LoginRequiredMixin, SuccessMessageMixin):
+    success_url = reverse_lazy('manage_work_experience_list')
     success_message = "The work experience was added successfully"
 
 
@@ -155,8 +155,8 @@ class CreatorMixinSkill(object):
         return queryset.filter(owner=self.request.user)
 
 
-class CreatorSkillMixin(CreatorMixinSkill, LoginRequiredMixin, PermissionRequiredMixin, SuccessMessageMixin):
-    success_url = reverse_lazy('builder:manage_skill_list')
+class CreatorSkillMixin(CreatorMixinSkill, LoginRequiredMixin, SuccessMessageMixin):
+    success_url = reverse_lazy('manage_skill_list')
     success_message = "The skill was added successfully"
 
 
@@ -217,8 +217,8 @@ class EditableLeadershipCreatorMixin(object):
         return super().form_valid(form)
 
 
-class CreatorLeadershipMixin(CreatorMixinLeadership, LoginRequiredMixin, PermissionRequiredMixin, SuccessMessageMixin):
-    success_url = reverse_lazy('builder:manage_leadership_list')
+class CreatorLeadershipMixin(CreatorMixinLeadership, LoginRequiredMixin, SuccessMessageMixin):
+    success_url = reverse_lazy('manage_leadership_list')
     success_message = "The leadership role was added successfully"
 
 
@@ -273,8 +273,8 @@ class CreatorMixinProject(object):
         return queryset.filter(owner=self.request.user)
 
 
-class CreatorProjectMixin(CreatorMixinProject, LoginRequiredMixin, PermissionRequiredMixin, SuccessMessageMixin):
-    success_url = reverse_lazy('builder:manage_project_list')
+class CreatorProjectMixin(CreatorMixinProject, LoginRequiredMixin, SuccessMessageMixin):
+    success_url = reverse_lazy('manage_project_list')
     success_message = "The project was added successfully"
 
 
@@ -322,7 +322,7 @@ class EducationView(generic.TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        educations = Education.objects.filter(is_active=True)
+        educations = Education.objects.filter(is_active=True).filter(owner=self.request.user)
         context["educations"] = educations
 
         return context
@@ -334,7 +334,7 @@ class WorkExperiencesView(generic.TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        work_experiences = WorkExperience.objects.filter(is_active=True)
+        work_experiences = WorkExperience.objects.filter(is_active=True).filter(owner=self.request.user)
         context["work_experiences"] = work_experiences
 
         return context
@@ -346,7 +346,7 @@ class ProjectsView(generic.TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        projects = Project.objects.filter(is_active=True)
+        projects = Project.objects.filter(is_active=True).filter(owner=self.request.user)
         context["projects"] = projects
 
         return context
@@ -358,7 +358,7 @@ class LeadershipView(generic.TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        leaderships = Leadership.objects.filter(is_active=True)
+        leaderships = Leadership.objects.filter(is_active=True).filter(owner=self.request.user)
         context["leaderships"] = leaderships
 
         return context
@@ -370,7 +370,7 @@ class SkillsView(generic.TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        skills = Skill.objects.filter(is_active=True)
+        skills = Skill.objects.filter(is_active=True).filter(owner=self.request.user)
         context["skills"] = skills
 
         return context
@@ -378,3 +378,35 @@ class SkillsView(generic.TemplateView):
 
 class ContactView(generic.TemplateView):
     template_name = "contact.html"
+
+
+class GenerateResumeView(generic.TemplateView):
+    """Class for generating resume data in pdf"""
+    template_name = "resume_pdf.html"
+
+    def get_context_data(self, **kwargs):
+        user = self.request.user
+        context = super().get_context_data(**kwargs)
+        users = User.objects.filter(id=user.id)
+        educations = Education.objects.filter(owner_id=user)
+        work_experiences = WorkExperience.objects.filter(owner_id=user)
+        projects = Project.objects.filter(owner_id=user)
+        skills = Skill.objects.filter(owner_id=user)
+        leaderships = Leadership.objects.filter(owner_id=user)
+
+        context["users"] = users
+        context["educations"] = educations
+        context["work_experiences"] = work_experiences
+        context["projects"] = projects
+        context["skills"] = skills
+        context["leaderships"] = leaderships
+
+        return context
+
+    def get(self, request, *args, **kwargs):
+        # Get template
+        html_template = get_template('resume_pdf.html').render(self.get_context_data())
+        pdf_file = HTML(string=html_template).write_pdf()
+        response = HttpResponse(pdf_file, content_type='application/pdf')
+        response['Content-Disposition'] = 'filename="resume_pdf.pdf"'
+        return response
