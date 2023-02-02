@@ -43,18 +43,14 @@
           <br>{{ request.user.address }}, {{ request.user.city }}, {{ request.user.state}} {{request.user.zip_code }} |
           {{ request.user.email }} | {{ request.user.phone }}
           {% if request.user.personal_url1 != None %}
-          | {{ request.user.personal_url1 }} |
+          | {{ request.user.personal_url1 }}
           {% endif %}
           {% if request.user.personal_url2 != None %}
-          | {{ request.user.personal_url2 }} |
+          | {{ request.user.personal_url2 }}
           {% endif %}
           {% if request.user.personal_url3 != None %}
-          | {{ request.user.personal_url3 }} |
+          | {{ request.user.personal_url3 }}
           {% endif %}
-          <span class="right">
-            <em class="float-right">{{ education.year }}</em>
-          </span>
-          <br>
           <br>
         </div>
       </div>

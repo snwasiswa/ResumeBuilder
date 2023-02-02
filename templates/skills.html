@@ -40,29 +40,29 @@
         </h3>
         <div class="mx-3" style="background-color:#454646">
           <ol class="my-3 " style="list-style-type: none;">
-          <div class="container my-3 pt-3">
-            <h5 class="text-center">Hard Skills</h5>
-            <div class="row py-3">
-              <ul>
-                {% for skill in skills %}
-                {% if skill.is_hard_skill and skill.is_active %}
-                {% include 'partials/rating.html' %}
-                {% endif %}
-                {% endfor %}
-              </ul>
+            <div class="container my-3 pt-3">
+              <h5 class="text-center">Hard Skills</h5>
+              <div class="row py-3">
+                <ul>
+                  {% for skill in skills %}
+                  {% if skill.is_hard_skill and skill.is_active %}
+                  {% include 'partials/rating.html' %}
+                  {% endif %}
+                  {% endfor %}
+                </ul>
+              </div>
+              <h5 class="text-center">Soft Skills</h5>
+              <div class="row ">
+                <ul>
+                  {% for skill in skills %}
+                  {% if skill.is_soft_skill and skill.is_active %}
+                  {% include 'partials/rating.html' %}
+                  {% endif %}
+                  {% endfor %}
+                </ul>
+              </div>
             </div>
-            <h5 class="text-center">Soft Skills</h5>
-            <div class="row ">
-              <ul>
-                {% for skill in skills %}
-                {% if skill.is_soft_skill and skill.is_active %}
-                {% include 'partials/rating.html' %}
-                {% endif %}
-                {% endfor %}
-              </ul>
-            </div>
-          </div>
-        </ol>
+          </ol>
         </div>
     </div>
   </div>
