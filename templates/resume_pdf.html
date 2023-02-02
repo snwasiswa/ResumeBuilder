@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+        integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+
+    <!--Required for Font Awesome Icons-->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
+    <link rel="canonical" href="{{request.path}}" />
+
+    <meta name="description" content="{% block description %}{% endblock %}">
+    <meta name="keywords" content="{% block keywords %}{% endblock %}">
+    <link rel="stylesheet" href="{% static " custom_css/styles.css" %}" type="text/css">
+    <title>Pdf Resume</title>
+    <style>
+        html,
+        body {
+            width: 16.5cm;
+            height: 29.7cm;
+        }
+
+        .title_line {
+
+            border-bottom: 2px solid black;
+        }
+
+        .center-text {
+            text-align: center
+        }
+
+        .date-text {
+            text-align: right
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+
+            display: block;
+            font-size: 1.0em;
+            margin-top: 0.2em;
+            margin-bottom: 0.4em;
+            margin-left: 0;
+            margin-right: 0;
+            font-weight: bold;
+        }
+
+        p {
+            margin: 10px 0;
+            padding: 5px;
+
+        }
+
+        em {
+
+            float: right
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        {% for user in users %}
+        <p class="center-text">
+            <strong>{{ user.first_name}} {{ user.last_name }}</strong>
+        </p>
+        <p class="center-text">{{ user.address }}, {{ user.city }}, {{ user.state}}
+            {{ user.zip_code }} |
+            {{ user.email }} | {{ user.phone }}
+            {% if user.personal_url1 != None %}
+            | {{ user.personal_url1 }}
+            {% endif %}
+            {% if user.personal_url2 != None %}
+            | {{ user.personal_url2 }}
+            {% endif %}
+            {% if user.personal_url3 != None %}
+            | {{ user.personal_url3 }}
+            {% endif %}
+        </p>
+        {% endfor %}
+    </div>
+    <h5 class="title_line">EDUCATION</h5>
+    {% for education in educations %}
+
+    <strong>{{ education.school }}</strong>
+    <span class="date">
+        <em class="date">{{ education.year }}</em>
+    </span>
+    <br>
+    <i>
+        {{ education.degree }} | {{ education.major }}
+    </i>
+    <br>
+    <br>
+
+    {% endfor %}
+    <h5 class="title_line pt-1">WORK EXPERIENCE</h5>
+    {% for work in work_experiences %}
+    <div class="mx-3">
+        <strong>{{ work.company }}</strong>
+        <span class="right">
+            <em class="">{{ work.year }}</em>
+        </span>
+        <br>
+        <i>{{ work.position }}</i>
+        {{ work.description_or_role | safe }}
+    </div>
+    {% endfor %}
+    <h5 class="title_line">PROJECTS</h5>
+    <h6 class="mx-3">Academic or work projects</h6>
+    {% for project in projects %}
+    {% if project.is_side_project == False and project.is_active %}
+    <div class="mx-3">
+        <strong>{{ project.name }}</strong>
+        <span class="right">
+            <em class="float-right">{{ project.year }}</em>
+        </span>
+        <br>
+        <i>
+            {{ project.description }}
+        </i>
+        {{ project.role|safe }}
+    </div>
+    {% endif %}
+    {% endfor %}
+    </div>
+    <h6 class="mx-3">Side projects</h6>
+    {% for project in projects %}
+    {% if project.is_active and project.is_side_project %}
+    <div class="mx-3">
+        <strong>{{ project.name }}</strong>
+        <span class="right">
+            <em class="float-right">{{ project.year }}</em>
+        </span>
+        <br>
+        <i>
+            {{ project.description }}
+        </i>
+        {{ project.role|safe }}
+    </div>
+    {% endif %}
+    {% endfor %}
+    <h5 class="title_line">HARD AND SOFT SKILLS</h5>
+    <div>
+        <div class="row mx-3">
+            {% for skill in skills %}
+            {% if skill.is_hard_skill and skill.is_active %}
+            {{ skill.name }},
+            {% endif %}
+            {% endfor %}
+        </div>
+        <div class="row mx-3">
+            <ul>
+                {% for skill in skills %}
+                {% if skill.is_soft_skill and skill.is_active %}
+                {{ skill.name }} <p>, </p>
+                {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+    {% if leaderships %}
+    <h5 class="title_line">LEADERSHIP OR EXTRACURRICULAR ACTIVITIES</h5>
+    {% for position in leaderships %}
+    <div class="mx-3">
+        <strong>
+            {{ position.name }}
+        </strong>
+        <br>
+        <i>
+            {{ position.description }}
+        </i>
+        <br>
+    </div>
+    {% endfor %}
+    {% endif %}
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+        integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+        crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
+        crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"
+        integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>
